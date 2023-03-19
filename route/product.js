@@ -1,8 +1,10 @@
 import express from "express";
 import productModel from "../models/product.js";
+import product from "../models/product.js";
+import Product from "../models/product.js";
 
 const router = express.Router()
-//product를 등록하는 api
+//product 전체를 불러오는 api
 router.get("/", (req, res) => {
     productModel
         .find()
@@ -65,8 +67,8 @@ router.post("/create", (req, res) =>{
                 user : {
                     name : result.name,
                     price : result.price,
-                    result : result._id
-
+                    desc : result.desc,
+                    category : result.category
                 }
             })
         })
@@ -76,19 +78,41 @@ router.post("/create", (req, res) =>{
             })
         })
 })
+//product를 update하는 api
+router.put("/:productid", (req, res) => {
+    const productid = req.params.productid // 변경할 대상
+    //변경하고자 하는 내용
+    const updateOps = {} //{}안에 변경할 내용
 
-router.put("/update", (req, res) =>{
-    res.json({
-        msg : "update product"
-    })
-})
+    for(const ops of req.body){
+        updateOps[ops.propName] =ops.value;
+    }
+
+    productModel
+        .findByIdAndUpdate(productid , {$set : updateOps})
+        .then( _=> {
+            res.json({
+                msg : `updated producted by ${productid}`
+            })
+        })
+        .catch(err => {
+            res.json({
+                msg : err.message
+            })
+        })
+
+ })
 
 
 //product 전체를 삭제하는 api
 router.delete("/", (req, res) => {
     productModel
         .deleteMany()
-        .then()
+        .then(_ => {
+            res.json({
+                msg : "deleted products"
+            })
+        })
         .catch(err =>{
             res.json({
                 msg : err.message
