@@ -7,13 +7,19 @@ const router = express.Router()
 router.get("/", (req ,res) =>{
     orderModel
         .find()
+        .populate("product")
         .then(order => {
+            if(!order){
+                return res.json({
+                    msg : "No data"
+                })
+            }
             res.json({
-                msg : "get all order",
-                count : order.length,
+                msg : "Successful get order",
                 order : order
             })
         })
+
         .catch(err => {
             res.json({
                 msg : err.message
@@ -25,15 +31,18 @@ router.get("/", (req ,res) =>{
 router.get("/:orderid", (req, res) =>{
     orderModel
         .findById(req.params.orderid)
+        .populate("product")
         .then(order =>{
             if(!order){
                 return res.json({
-                    msg : "no data"
+                    msg : "No data"
                 })
             }
             res.json({
-                msg : "Sucessfull get order"
+                msg : "Succeesfull get order",
+                order : order
             })
+
         })
         .catch(err => {
             res.json({
@@ -41,23 +50,19 @@ router.get("/:orderid", (req, res) =>{
             })
         })
 })
-
+    //order 등록하는 api
 router.post("/create", (req, res) => {
     const newOrder = new orderModel({
-        product : req.body.orderProduct,
-        qty : req.body.orderQty,
-        memo : req.body.orderMemo
+        product : req.body.product, //넵
+        qty : req.body.qty,
+        memo : req.body.memo
     })
-    orderModel
-        .save() // 저장
+    newOrder
+        .save()// 저장
         .then(result => {
             res.json({
                 msg : "Successful create order",
-                user : {
-                    product : result.product,
-                    qty : result.qty,
-                    memo : result.memo
-                }
+                user :result
             })
         })
         .catch(err => {
@@ -67,7 +72,7 @@ router.post("/create", (req, res) => {
         })
 })
 
-router.put("/orderid", (req, res) => {
+router.put("/:orderid", (req, res) => {
     const orderid = req.params.orderid  //변경할 대상
 
     const updateOps = {} // 업데이트할 내용

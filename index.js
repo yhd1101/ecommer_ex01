@@ -5,6 +5,7 @@ import morgan from "morgan"
 import bodyParser from "body-parser";
 import doEnv from "dotenv"
 import mongoose from "mongoose";
+import userRoutes from "./route/user"
 const app = express()
 
 doEnv.config()
@@ -35,6 +36,7 @@ app.use(morgan("common"))
 app.use("/product", productRoutes)
 
 app.use("/order", productOrders)
+app.use("/user", userRoutes)
 
 
 const port = process.env.PORT || 9090

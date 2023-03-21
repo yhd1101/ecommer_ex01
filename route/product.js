@@ -57,7 +57,7 @@ router.post("/create", (req, res) =>{
         name : req.body.productName,
         price : req.body.productPrice,
         desc : req.body.productDesc,
-        category : req.body.productCatagory
+        category : req.body.productCategory
     })
     newProduct
         .save() //저장
