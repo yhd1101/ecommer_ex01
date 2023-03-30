@@ -14,6 +14,12 @@ const ordersSchema = mongoose.Schema({
     },
     memo : {
         type : String
+    },
+
+    user : {
+        type : mongoose.Schema.Types.ObjectId,
+        ref : "user",
+        required: true
     }
 })
 
