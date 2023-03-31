@@ -1,6 +1,7 @@
 import express from "express";
 import orderModel from "../models/order.js";
 import order from "../models/order.js";
+import checkAuth from "../config/checkAuth.js";
 
 const router = express.Router()
 //order 전체를 불러오는 api
@@ -8,6 +9,7 @@ router.get("/", (req ,res) =>{
     orderModel
         .find()
         .populate("product")
+        .populate("user")
         .then(order => {
             if(!order){
                 return res.json({
@@ -32,6 +34,7 @@ router.get("/:orderid", (req, res) =>{
     orderModel
         .findById(req.params.orderid)
         .populate("product")
+        .populate("user")
         .then(order =>{
             if(!order){
                 return res.json({
@@ -51,11 +54,12 @@ router.get("/:orderid", (req, res) =>{
         })
 })
     //order 등록하는 api
-router.post("/create", (req, res) => {
+router.post("/create",checkAuth, (req, res) => {
     const newOrder = new orderModel({
         product : req.body.product, //넵
         qty : req.body.qty,
-        memo : req.body.memo
+        memo : req.body.memo,
+        user : req.body.user
     })
     newOrder
         .save()// 저장
