@@ -18,6 +18,7 @@ const getProduct = async (req, res) => {
         })
     }
 }
+
 //특정 product를 불러옴
 const getProductId = async (req, res) => {
 
@@ -42,6 +43,7 @@ const getProductId = async (req, res) => {
         })
     }
 }
+
 //product 등록하는 api
 const createProduct = async (req ,res) => {
     const { productName, price, desc, category} = req.body
@@ -94,6 +96,7 @@ const updateProduct = async (req, res) =>{
     }
 
 }
+
 //product 전체를 삭제함
 const deleteProduct = async (req, res) => {
     try {
@@ -120,7 +123,7 @@ const deleteProductId = async (req, res) => {
                 })
             })
     } catch (err) {
-        res.status.json({
+        res.status(500).json({
             msg : err
         })
     }
